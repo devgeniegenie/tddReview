@@ -14,35 +14,50 @@ public class ExpiryDateCalculatorTest {
      * 3. 10만원 납부시 1년 제공
      */
 
-    private void assertExpiryDate(LocalDate billingDate, int pay, LocalDate expiryDate) {
+    private void assertExpiryDate(PayData payData, LocalDate expectedExpiryDate) {
         ExpiryDateCalculator cal = new ExpiryDateCalculator();
-        LocalDate realExpiryDate = cal.calulateExpiryDate(billingDate, pay);
-        assertEquals(expiryDate, realExpiryDate);
+        LocalDate realExpiryDate = cal.calulateExpiryDate(payData);
+        assertEquals(expectedExpiryDate, realExpiryDate);
     }
 
     @Test
     void 만원납부_한달뒤만료() {
-        assertExpiryDate(LocalDate.of(2019, 3, 1)
-                , 10_000
+        assertExpiryDate(
+                PayData.builder()
+                        .billingDate(LocalDate.of(2019, 3, 1))
+                        .payAmount(10000)
+                        .build()
                 , LocalDate.of(2019, 4, 1));
 
-        assertExpiryDate(LocalDate.of(2019, 5, 5)
-                , 10_000
+        assertExpiryDate(
+                PayData.builder()
+                        .billingDate(LocalDate.of(2019, 5, 5))
+                        .payAmount(10000)
+                        .build()
                 , LocalDate.of(2019, 6, 5));
     }
 
     @Test
     void 납부일과_다음달납부일_다름() {
-        assertExpiryDate(LocalDate.of(2019, 1, 31)
-                , 10000
+        assertExpiryDate(
+                PayData.builder()
+                        .billingDate(LocalDate.of(2019, 1, 31))
+                        .payAmount(10000)
+                        .build()
                 , LocalDate.of(2019, 2, 28));
 
-        assertExpiryDate(LocalDate.of(2019, 5, 31)
-                , 10000
+        assertExpiryDate(
+                PayData.builder()
+                        .billingDate(LocalDate.of(2019, 5, 31))
+                        .payAmount(10000)
+                        .build()
                 , LocalDate.of(2019, 6, 30));
 
-        assertExpiryDate(LocalDate.of(2020, 1, 31)
-                , 10000
+        assertExpiryDate(
+                PayData.builder()
+                        .billingDate(LocalDate.of(2020, 1, 31))
+                        .payAmount(10000)
+                        .build()
                 , LocalDate.of(2020, 2, 29));
     }
 
